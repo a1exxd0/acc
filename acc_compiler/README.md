@@ -1,1 +1,1 @@
-Compiler library.
+Compiler library components. Will build the actual compiler first before preprocessor.
