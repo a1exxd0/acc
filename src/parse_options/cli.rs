@@ -191,45 +191,25 @@ impl AccArgs {
             .arg_c_std()
             .get_matches();
 
-        let output_path = matches
-            .get_one::<String>("output")
-            .expect("This is validated by `clap`")
-            .to_string();
-
-        let input_files: Vec<String> = matches
-            .get_many::<String>("input")
-            .expect("This is validated by `clap`")
-            .map(|item| item.to_string())
-            .collect();
-
-        let opt_level = matches
-            .get_one::<u8>("opt_level")
-            .expect("This is validated by `clap`")
-            .clone();
-
-        let link_dirs: Vec<String> = matches
-            .get_many::<String>("link_dirs")
-            .map(|item| item.map(|item| item.to_string()).collect())
-            .unwrap_or_default();
-
-        let include_dirs: Vec<String> = matches
-            .get_many::<String>("include_dirs")
-            .map(|item| item.map(|item| item.to_string()).collect())
-            .unwrap_or_default();
-
-        let c_std = matches
-            .get_one::<String>("c_std")
-            .expect("This is validated by `clap`")[1..]
-            .parse::<u16>()
-            .unwrap();
-
-        AccArgs {
-            output_path,
-            input_files,
-            opt_level,
-            link_dirs,
-            include_dirs,
-            c_std,
+        Self {
+            output_path: matches.get_one::<String>("output").cloned().unwrap(),
+            input_files: matches
+                .get_many::<String>("input")
+                .map(|items| items.cloned().collect())
+                .unwrap(),
+            opt_level: *matches.get_one::<u8>("opt_level").unwrap(),
+            link_dirs: matches
+                .get_many::<String>("link_dirs")
+                .map(|items| items.cloned().collect())
+                .unwrap_or_default(),
+            include_dirs: matches
+                .get_many::<String>("include_dirs")
+                .map(|items| items.cloned().collect())
+                .unwrap_or_default(),
+            c_std: matches
+                .get_one::<String>("c_std")
+                .map(|std| std[1..].parse().unwrap())
+                .unwrap(),
         }
     }
 }
