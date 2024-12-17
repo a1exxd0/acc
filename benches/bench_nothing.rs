@@ -21,4 +21,4 @@ fn bench_factorial(c: &mut Criterion) {
 }
 
 criterion_group!(benches, criterion_benchmark, bench_factorial);
-criterion_main!(benches);   
+criterion_main!(benches);
