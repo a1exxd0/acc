@@ -51,16 +51,28 @@ jobs:
         rust:
           - nightly
     name: format/${{ matrix.rust }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust }}
           components: rustfmt
-      - run: |
-          cargo fmt --all --check || 
-          (cargo fmt --all && 
-           git add . && 
-           git commit -m "style: auto formatter called from gh-actions" && 
-           git push)
+      - name: Format repository
+        run: cargo fmt --all --check || cargo fmt --all
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        id: auto-commit-action
+        with:
+          commit_message: "style: auto formatter called from gh-actions"
+          
+      - name: "Run if changes have been detected"
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        run: echo "Changes!"
+
+      - name: "Run if no changes have been detected"
+        if: steps.auto-commit-action.outputs.changes_detected == 'false'
+        run: echo "No Changes!"
 
