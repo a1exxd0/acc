@@ -7,7 +7,7 @@ use clap::{crate_authors, crate_name, crate_version, Arg, ArgAction, Command};
 impl AccCommand {
     /// Base constructor for an AccCommand object. Sets up formatting for
     /// the project binary output as well as obligatory setup for `clap`
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// use acc::parse_options::types::AccCommand;
@@ -43,9 +43,9 @@ impl AccCommand {
     /// Appends output path command for `acc`. This should be called before
     /// calling for matches typically, but we use the builder pattern to
     /// allow for flexibility.
-    /// 
+    ///
     /// Only one such output path is allowed, specifying file path to output.
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// use acc::parse_options::types::AccCommand;
@@ -66,9 +66,9 @@ impl AccCommand {
     /// Appends input paths for `acc`. This should be called before
     /// calling for matches typically, but we use the builder pattern to
     /// allow for flexibility.
-    /// 
+    ///
     /// Inputs are specified without flags, and at least 1 is required.
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// use acc::parse_options::types::AccCommand;
@@ -85,9 +85,9 @@ impl AccCommand {
     }
 
     /// Appends optimization level command for `acc`.
-    /// 
+    ///
     /// Only one level is allowed.
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// use acc::parse_options::types::AccCommand;
@@ -106,9 +106,9 @@ impl AccCommand {
     }
 
     /// Appends library directory paths for `acc`.
-    /// 
+    ///
     /// Not a required item. Can have multiple.
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// use acc::parse_options::types::AccCommand;
@@ -124,9 +124,9 @@ impl AccCommand {
     }
 
     /// Appends include directory paths for `acc`.
-    /// 
+    ///
     /// Not a required item. Can have multiple.
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// use acc::parse_options::types::AccCommand;
@@ -142,10 +142,10 @@ impl AccCommand {
     }
 
     /// Appends cstd command for `acc`.
-    /// 
+    ///
     /// Only one standard is allowed. Currently supports "c90" only.
     /// Case sensitive.
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// use acc::parse_options::types::AccCommand;
@@ -176,7 +176,7 @@ impl AccCommand {
 impl AccArgs {
     /// Interpret arguments from command line recieved according to
     /// `AccArgs` and `AccCommand` specification.
-    /// 
+    ///
     /// ```no_run rust
     /// use acc::parse_options::types::AccArgs;
     /// let args: AccArgs = AccArgs::from_args();
