@@ -31,7 +31,7 @@ cargo install --path .
 In an attempt to make this as easy to use as possible, the project will implement a small subset of the `gcc` API:
 <div>
     <p align="left">
-        <img src="https://github.com/a1exxd0/tree/main/.github/assets/help-screen.png" width="800">
+        <img src="https://github.com/a1exxd0/acc/blob/main/.github/assets/help-screen.png?raw=true" width="800">
     </p>
 </div>
 For example, a well-formed call would be:
