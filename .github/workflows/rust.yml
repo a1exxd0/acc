@@ -20,6 +20,7 @@ jobs:
     name: build/${{ matrix.rust }}
     steps:
     - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@nightly
     - name: Build
       run: cargo +${{ matrix.rust }} build --verbose
     - name: Run tests
