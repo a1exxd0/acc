@@ -1,8 +1,8 @@
 [package]
-name = "acc"
+name = "acc_compiler"
 version = "0.1.0"
 authors = ["Alex Do <alexxdo2004@gmail.com>"]
-description = "C90 compiler"
+description = "acc compiler library"
 homepage = "https://github.com/a1exxd0/acc"
 repository = "https://github.com/a1exxd0/acc"
 readme = "README.md"
@@ -10,22 +10,17 @@ license = "MIT"
 edition = "2021"
 exclude = [".github"]
 
+[lib]
+name = "acc_compiler"
+path="src/lib.rs"
+
 [features]
 
 [dependencies]
-acc_compiler = { path = "./acc_compiler" }
 
 [build-dependencies]
 
 [dev-dependencies]
-criterion = { version = "0.5.1" }
-
-[[bin]]
-name = "acc"
-path = "src/main.rs"
-
-[workspace]
-members = [ "acc_compiler" ]
 
 [profile.dev]
 opt-level = 0
@@ -41,7 +36,3 @@ lto = true
 strip = true
 codegen-units = 1
 panic = "abort"
-
-[[bench]]
-name = "bench_nothing"
-harness = false
