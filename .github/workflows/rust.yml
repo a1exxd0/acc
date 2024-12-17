@@ -57,4 +57,11 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           components: rustfmt
-      - run: cargo fmt --all --check
+      - run: |
+          cargo fmt --all --check
+          if [ $? -ne 0]; then
+            cargo fmt --all
+            git add .
+            git commit -m "style: auto formatter called from gh-actions"
+            git push
+          fi
