@@ -14,7 +14,7 @@ exclude = [".github"]
 
 [dependencies]
 acc_compiler = { path = "./acc_compiler" }
-clap = { version = "4.5.23", features = ["derive", "cargo"] }
+clap = { version = "4.5.23", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
 
 [build-dependencies]
 
