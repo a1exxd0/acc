@@ -156,7 +156,7 @@ impl AccCommand {
         self.arg(
             Arg::new("c_std")
                 .long("std")
-                .help("Choose C standard (C90)")
+                .help("Choose C standard")
                 .require_equals(true)
                 .num_args(1)
                 .default_value("c90")
