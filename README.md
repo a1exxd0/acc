@@ -40,6 +40,7 @@ For example, a well-formed call would be:
 acc main.c -o main -O3
 ```
 ## Features
+- Not implementing trigraphs because it's outdated - pointless exercise
 
 ## Testing
 
