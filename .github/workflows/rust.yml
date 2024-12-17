@@ -12,12 +12,18 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust:
+          - nightly
+    name: build/${{ matrix.rust }}
     steps:
     - uses: actions/checkout@v4
     - name: Build
-      run: cargo build --verbose
+      run: cargo +${{ matrix.rust }} build --verbose
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo +${{ matrix.rust }} test --verbose
 
   clippy:
     runs-on: ubuntu-latest
