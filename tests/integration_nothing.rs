@@ -1,0 +1,7 @@
+use acc::lib::add_two;
+
+#[test]
+fn it_adds_two() {
+    let result = add_two(1, 5);
+    assert_eq!(result, 6);
+}

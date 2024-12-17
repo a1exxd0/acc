@@ -1,0 +1,41 @@
+[package]
+name = "acc"
+version = "0.1.0"
+authors = ["Alex Do <alexxdo2004@gmail.com>"]
+description = "C90 compiler"
+homepage = "https://github.com/a1exxd0/acc"
+repository = "https://github.com/a1exxd0/acc"
+readme = "README.md"
+license = "MIT"
+edition = "2021"
+exclude = [".github"]
+
+[features]
+
+[dependencies]
+
+[build-dependencies]
+
+[dev-dependencies]
+criterion = { version = "0.5.1", features = ["html_reports"] }
+
+[workspace]
+
+[profile.dev]
+opt-level = 0
+debug = true
+overflow-checks = true
+lto = false
+
+[profile.release]
+opt-level = 3
+debug = false
+overflow-checks = false
+lto = true
+strip = true
+codegen-units = 1
+panic = "abort"
+
+[[bench]]
+name = "bench_nothing"
+harness = false
