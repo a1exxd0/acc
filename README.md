@@ -34,11 +34,11 @@ In an attempt to make this as easy to use as possible, the project will implemen
         <img src="https://github.com/a1exxd0/acc/blob/main/.github/assets/help-screen.png?raw=true" width="800">
     </p>
 </div>
-For example, a well-formed call would be:
+
+For example, a well-formed call would be: 
 ```sh
 acc main.c -o main -O3
 ```
-
 ## Features
 
 ## Testing
