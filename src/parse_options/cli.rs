@@ -4,6 +4,9 @@ use clap::builder::styling::{AnsiColor, Color, Style};
 use clap::builder::Styles;
 use clap::{crate_name, crate_version, Arg, ArgAction, Command};
 
+/// Currently supported C version. Leaving room for expansion down the line
+const SUPPORTED_C_VERSIONS: [&str; 1] = ["c90"];
+
 impl AccCommand {
     /// Base constructor for an AccCommand object. Sets up formatting for
     /// the project binary output as well as obligatory setup for `clap`
@@ -229,9 +232,7 @@ impl AccArgs {
     }
 }
 
-/// Currently supported C version. Leaving room for expansion down the line
-const SUPPORTED_C_VERSIONS: [&str; 1] = ["c90"];
-
+/// Macro for the below const variable
 macro_rules! styled {
     ($color:expr) => {
         Style::new().fg_color(Some(Color::Ansi($color)))
