@@ -158,7 +158,7 @@ impl AccCommand {
         self.arg(
             Arg::new("c_std")
                 .long("std")
-                .help("Choose C standard")
+                .help("Specify C standard")
                 .require_equals(true)
                 .num_args(1)
                 .default_value("c90")
@@ -232,34 +232,25 @@ impl AccArgs {
 /// Currently supported C version. Leaving room for expansion down the line
 const SUPPORTED_C_VERSIONS: [&str; 1] = ["c90"];
 
+macro_rules! styled {
+    ($color:expr) => {
+        Style::new().fg_color(Some(Color::Ansi($color)))
+    };
+}
+
 /// Styles used for the `clap` toolkit
 const STYLES: Styles = Styles::styled()
-    .usage(
-        Style::new()
-            .bold()
-            .underline()
-            .fg_color(Some(Color::Ansi(AnsiColor::Yellow))),
-    )
-    .header(
-        Style::new()
-            .bold()
-            .underline()
-            .fg_color(Some(Color::Ansi(AnsiColor::Yellow))),
-    )
-    .literal(Style::new().fg_color(Some(Color::Ansi(AnsiColor::Green))))
-    .invalid(Style::new().bold().fg_color(Some(Color::Ansi(AnsiColor::Red))))
-    .error(Style::new().bold().fg_color(Some(Color::Ansi(AnsiColor::Red))))
-    .valid(
-        Style::new()
-            .bold()
-            .underline()
-            .fg_color(Some(Color::Ansi(AnsiColor::Green))),
-    )
-    .placeholder(Style::new().fg_color(Some(Color::Ansi(AnsiColor::White))));
+    .usage(styled!(AnsiColor::Yellow).bold().underline())
+    .header(styled!(AnsiColor::Yellow).bold().underline())
+    .literal(styled!(AnsiColor::Green))
+    .invalid(styled!(AnsiColor::Red).bold())
+    .error(styled!(AnsiColor::Red).bold())
+    .valid(styled!(AnsiColor::Green).bold().underline())
+    .placeholder(styled!(AnsiColor::White));
 
 #[cfg(test)]
 mod tests {
-    use super::{AccCommand, AccArgs};
+    use super::{AccArgs, AccCommand};
 
     // Helper function to create a test command with predefined arguments
     fn create_test_command() -> AccCommand {
