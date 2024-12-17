@@ -2,7 +2,7 @@ use crate::parse_options::types::AccArgs;
 use crate::parse_options::types::AccCommand;
 use clap::builder::styling::{AnsiColor, Color, Style};
 use clap::builder::Styles;
-use clap::{crate_authors, crate_name, crate_version, Arg, ArgAction, Command};
+use clap::{crate_name, crate_version, Arg, ArgAction, Command};
 
 impl AccCommand {
     /// Base constructor for an AccCommand object. Sets up formatting for

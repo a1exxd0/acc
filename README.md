@@ -15,11 +15,29 @@
 
 ### Table of contents
 - [Installation](#installation)
+- [Usage](#usage)
 - [Features](#features)
 - [Testing](#testing)
 - [Project goals](#project-goals)
 
 ## Installation
+The project is very straightforward to build and as of right now requires no extra installs outside of the `rust` toolchain.
+```rust
+cargo build --release
+cargo install --path .
+```
+
+## Usage
+In an attempt to make this as easy to use as possible, the project will implement a small subset of the `gcc` API:
+<div>
+    <p align="left">
+        <img src="https://github.com/a1exxd0/tree/main/.github/assets/help-screen.png" width="800">
+    </p>
+</div>
+For example, a well-formed call would be:
+```sh
+acc main.c -o main -O3
+```
 
 ## Features
 
