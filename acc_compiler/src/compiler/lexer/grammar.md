@@ -32,7 +32,7 @@ Keywords should be identified before identifiers (no identifier should consist o
 ```
 <identifier>
         ::= <nondigit> | <identifier><nondigit> |
-            <identifier> | digit
+            <identifier>digit
 
 <nondigit>
         ::= [a-zA-Z_]
