@@ -28,7 +28,7 @@ impl AccCommand {
 
         AccCommand(
             Command::new(crate_name!())
-                .author(crate_authors!("\n"))
+                .author("Alex Do")
                 .version(crate_version!())
                 .about("C90 compiler in Rust. ")
                 .long_about("C90 compiler in Rust. ")
