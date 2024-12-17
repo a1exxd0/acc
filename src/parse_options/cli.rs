@@ -119,6 +119,7 @@ impl AccCommand {
         self.arg(
             Arg::new("link_dirs")
                 .short('L')
+                .action(ArgAction::Append)
                 .help("Specify directory containing libraries to link"),
         )
     }
@@ -137,6 +138,7 @@ impl AccCommand {
         self.arg(
             Arg::new("include_dirs")
                 .short('I')
+                .action(ArgAction::Append)
                 .help("Specify directory containing headers"),
         )
     }
@@ -164,12 +166,25 @@ impl AccCommand {
         )
     }
 
+    /// Wrapper around `clap_builder::builder::command::Command::arg`
     fn arg(self, a: impl Into<Arg>) -> Self {
         AccCommand(self.0.arg(a))
     }
 
+    /// Wrapper around `clap_builder::builder::command::Command::get_matches`.
     pub fn get_matches(self) -> clap::ArgMatches {
         self.0.get_matches()
+    }
+
+    #[cfg(test)]
+    /// Wrapper around `clap_builder::builder::command::Command::get_matches_from`.
+    /// Only ever used for testing.
+    pub fn get_matches_from<I, T>(self, itr: I) -> clap::ArgMatches
+    where
+        I: IntoIterator<Item = T>,
+        T: Into<std::ffi::OsString> + Clone,
+    {
+        self.0.get_matches_from(itr)
     }
 }
 
@@ -241,3 +256,106 @@ const STYLES: Styles = Styles::styled()
             .fg_color(Some(Color::Ansi(AnsiColor::Green))),
     )
     .placeholder(Style::new().fg_color(Some(Color::Ansi(AnsiColor::White))));
+
+#[cfg(test)]
+mod tests {
+    use super::{AccCommand, AccArgs};
+
+    // Helper function to create a test command with predefined arguments
+    fn create_test_command() -> AccCommand {
+        AccCommand::base()
+            .arg_output_path()
+            .arg_input_files()
+            .arg_opt_level()
+            .arg_link_dirs()
+            .arg_include_dirs()
+            .arg_c_std()
+    }
+
+    #[test]
+    pub fn test_from_args_full_configuration() {
+        let args = vec![
+            "acc",
+            "input1.c",
+            "input2.c",
+            "-o",
+            "output/path",
+            "-O",
+            "2",
+            "-L",
+            "/lib/path1",
+            "-L",
+            "/lib/path2",
+            "-I",
+            "/include/path1",
+            "-I",
+            "/include/path2",
+            "--std=c90",
+        ];
+
+        let matches = create_test_command().get_matches_from(args);
+
+        let acc_args = AccArgs {
+            output_path: matches.get_one::<String>("output").cloned().unwrap(),
+            input_files: matches
+                .get_many::<String>("input")
+                .map(|items| items.cloned().collect())
+                .unwrap(),
+            opt_level: *matches.get_one::<u8>("opt_level").unwrap(),
+            link_dirs: matches
+                .get_many::<String>("link_dirs")
+                .map(|items| items.cloned().collect())
+                .unwrap_or_default(),
+            include_dirs: matches
+                .get_many::<String>("include_dirs")
+                .map(|items| items.cloned().collect())
+                .unwrap_or_default(),
+            c_std: matches
+                .get_one::<String>("c_std")
+                .map(|std| std[1..].parse().unwrap())
+                .unwrap(),
+        };
+
+        assert_eq!(acc_args.output_path, "output/path");
+        assert_eq!(acc_args.input_files, vec!["input1.c", "input2.c"]);
+        assert_eq!(acc_args.opt_level, 2);
+        assert_eq!(acc_args.link_dirs, vec!["/lib/path1", "/lib/path2"]);
+        assert_eq!(acc_args.include_dirs, vec!["/include/path1", "/include/path2"]);
+        assert_eq!(acc_args.c_std, 90);
+    }
+
+    #[test]
+    fn test_from_args_minimal_configuration() {
+        let args = vec!["acc", "input.c", "-o", "output/path", "-O", "0", "--std=c90"];
+
+        let matches = create_test_command().get_matches_from(args);
+
+        let acc_args = AccArgs {
+            output_path: matches.get_one::<String>("output").cloned().unwrap(),
+            input_files: matches
+                .get_many::<String>("input")
+                .map(|items| items.cloned().collect())
+                .unwrap(),
+            opt_level: *matches.get_one::<u8>("opt_level").unwrap(),
+            link_dirs: matches
+                .get_many::<String>("link_dirs")
+                .map(|items| items.cloned().collect())
+                .unwrap_or_default(),
+            include_dirs: matches
+                .get_many::<String>("include_dirs")
+                .map(|items| items.cloned().collect())
+                .unwrap_or_default(),
+            c_std: matches
+                .get_one::<String>("c_std")
+                .map(|std| std[1..].parse().unwrap())
+                .unwrap(),
+        };
+
+        assert_eq!(acc_args.output_path, "output/path");
+        assert_eq!(acc_args.input_files, vec!["input.c"]);
+        assert_eq!(acc_args.opt_level, 0);
+        assert!(acc_args.link_dirs.is_empty());
+        assert!(acc_args.include_dirs.is_empty());
+        assert_eq!(acc_args.c_std, 90);
+    }
+}
