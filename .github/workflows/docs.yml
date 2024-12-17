@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: dtolnay/rust-toolchain@nightly
     - name: Build docs
-      run: cd /home/runner/work/acc && cargo clean --doc && cargo doc --no-deps
+      run: ls && cd /home/runner/work/acc && ls && cargo clean --doc && cargo doc --no-deps
     - name: Add redirect
       run: echo '<meta http-equiv="refresh" content="0;url=acc/index.html">' > target/doc/index.html
     - name: Remove lock file
