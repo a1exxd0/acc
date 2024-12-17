@@ -6,7 +6,6 @@ fn main() {
 mod tests {
     use acc::lib::add_two;
 
-
     #[test]
     fn test_nothing() {
         let x = add_two(1, 2);

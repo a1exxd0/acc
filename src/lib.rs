@@ -1,6 +1,6 @@
 pub mod lib {
     /// Adds two integers of specific type `i32`
-    /// 
+    ///
     /// # Examples
     /// ```rust
     /// use acc::lib::add_two;
