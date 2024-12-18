@@ -1,18 +1,18 @@
 use crate::compiler::lexer::types::KeyWord;
 use once_cell::sync::Lazy;
-use std::collections::HashSet;
+use std::collections::HashMap;
 
 macro_rules! initialize_keywords {
     ($($name:ident => $str:expr),* $(,)?) => {{
-        let mut set = HashSet::new();
+        let mut map = HashMap::new();
         $(
-            set.insert(($str, KeyWord::$name));
+            map.insert($str, KeyWord::$name);
         )*
-        set
+        map
     }};
 }
 
-static RESERVED_KEYWORDS: Lazy<HashSet<(&'static str, KeyWord)>> = Lazy::new(|| {
+static RESERVED_KEYWORDS: Lazy<HashMap<&'static str, KeyWord>> = Lazy::new(|| {
     initialize_keywords!(
         Auto        => "auto",
         Double      => "double",
