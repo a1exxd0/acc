@@ -38,7 +38,7 @@ impl AccCommand {
                 .styles(STYLES)
                 .help_template(help_template)
                 .color(clap::ColorChoice::Auto)
-                .arg_required_else_help(true)
+                .arg_required_else_help(true),
         )
     }
 
