@@ -39,7 +39,6 @@ impl AccCommand {
                 .help_template(help_template)
                 .color(clap::ColorChoice::Auto)
                 .arg_required_else_help(true)
-                .allow_external_subcommands(true),
         )
     }
 
