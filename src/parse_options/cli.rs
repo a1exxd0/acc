@@ -5,7 +5,7 @@ use clap::builder::Styles;
 use clap::{crate_name, crate_version, Arg, ArgAction, Command};
 
 /// Currently supported C version. Leaving room for expansion down the line
-const SUPPORTED_C_VERSIONS: [&str; 1] = ["c90"];
+const SUPPORTED_C_VERSIONS: [&str; 2] = ["c89", "c90"];
 
 impl AccCommand {
     /// Base constructor for an AccCommand object. Sets up formatting for
