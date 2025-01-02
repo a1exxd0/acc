@@ -157,3 +157,22 @@ impl MappedChar {
         (self.row, self.col)
     }
 }
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn map_str_and_print() {
+        let mapper = super::CharMapper::new("HelloWorld! \r\n Alex??(1");
+        let mapped_chars: Vec<super::MappedChar> = mapper.into_iter().collect();
+
+        let printed = super::super::pretty_print::mapped_chars_to_str(&mapped_chars);
+        assert_eq!(printed, "HelloWorld! \n Alex[1");
+        assert_eq!(
+            super::super::pretty_print::verbose_mapped_chars_to_str(&mapped_chars)
+                .lines()
+                .next(),
+            Some("H (0, 0)")
+        );
+    }
+}
