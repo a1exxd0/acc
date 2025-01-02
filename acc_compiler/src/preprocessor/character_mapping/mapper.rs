@@ -12,26 +12,26 @@ use super::spec::{ALPHABET, WHITESPACE_SET};
 /// let mut mapper = CharMapper::new(my_str);
 /// let vec: Vec<MappedChar> = mapper.into_iter().collect();
 ///
-/// assert_eq!(vec[0].char().unwrap(), b'x');
-/// assert_eq!(vec[3].char().unwrap(), b' ');
-/// assert_eq!(vec[4].char().unwrap(), b'3');
+/// assert_eq!(vec[0].chr().unwrap(), b'x');
+/// assert_eq!(vec[3].chr().unwrap(), b' ');
+/// assert_eq!(vec[4].chr().unwrap(), b'3');
 /// ```
 /// ```rust
 /// use acc_compiler::preprocessor::character_mapping::mapper::{CharMapper, MappedChar};
 ///
 /// let mut mapper = CharMapper::new("hey\n??(x");
-/// assert_eq!(mapper.next().unwrap().char(), Some(b'h'));
-/// assert_eq!(mapper.next().unwrap().char(), Some(b'e'));
-/// assert_eq!(mapper.next().unwrap().char(), Some(b'y'));
+/// assert_eq!(mapper.next().unwrap().chr(), Some(b'h'));
+/// assert_eq!(mapper.next().unwrap().chr(), Some(b'e'));
+/// assert_eq!(mapper.next().unwrap().chr(), Some(b'y'));
 /// mapper.next();
 ///
 /// let next = mapper.next().unwrap();
 /// assert_eq!(next.pos(), (1, 0));
-/// assert_eq!(next.char(), Some((b'[')));
+/// assert_eq!(next.chr(), Some((b'[')));
 ///
 /// let final_char = mapper.next().unwrap();
 /// assert_eq!(final_char.pos(), (1, 3));
-/// assert_eq!(final_char.char(), Some(b'x'));
+/// assert_eq!(final_char.chr(), Some(b'x'));
 ///
 /// assert_eq!(mapper.next(), None);
 /// ```
@@ -49,7 +49,7 @@ pub struct CharMapper<'a> {
 /// use acc_compiler::preprocessor::character_mapping::mapper::MappedChar;
 /// let chr = MappedChar::new(Some(b'a'), 10, 3);
 ///
-/// assert_eq!(chr.char(), Some(b'a'));
+/// assert_eq!(chr.chr(), Some(b'a'));
 /// assert_eq!(chr.pos(), (10, 3));
 /// ```
 #[derive(Debug, PartialEq, Eq)]
@@ -85,7 +85,7 @@ impl Iterator for CharMapper<'_> {
                 return result;
             }
             ('\r', '\n', _) => {
-                let result = Some(MappedChar::new(Some(b' '), self.row, self.col));
+                let result = Some(MappedChar::new(Some(b'\n'), self.row, self.col));
 
                 self.row += 1;
                 self.col = 0;
@@ -93,7 +93,7 @@ impl Iterator for CharMapper<'_> {
                 return result;
             }
             ('\n', _, _) => {
-                let result = Some(MappedChar::new(Some(b' '), self.row, self.col));
+                let result = Some(MappedChar::new(Some(b'\n'), self.row, self.col));
 
                 self.row += 1;
                 self.col = 0;
@@ -132,7 +132,7 @@ impl MappedChar {
 
     /// Return Option<u8> of character it is holding. This will be None if the character
     /// is not part of the source alphabet.
-    pub fn char(&self) -> Option<u8> {
+    pub fn chr(&self) -> Option<u8> {
         self.chr
     }
 
