@@ -1,0 +1,144 @@
+use crate::preprocessor::character_mapping::{cursor::Cursor, cursor::EOF_CHAR, spec::TRIGRAPH_MAP};
+
+use super::spec::{ALPHABET, WHITESPACE_SET};
+
+/// Implementation for translation phase 1, mapping characters to source
+/// language alphabet.
+///
+/// # Examples
+/// ```rust
+/// use acc_compiler::preprocessor::character_mapping::mapper::{CharMapper, MappedChar};
+/// let my_str = "xyz\r\n3";
+/// let mut mapper = CharMapper::new(my_str);
+/// let vec: Vec<MappedChar> = mapper.into_iter().collect();
+/// 
+/// assert_eq!(vec[0].char().unwrap(), b'x');
+/// assert_eq!(vec[3].char().unwrap(), b' ');
+/// assert_eq!(vec[4].char().unwrap(), b'3');
+/// ```
+/// ```rust
+/// use acc_compiler::preprocessor::character_mapping::mapper::{CharMapper, MappedChar};
+///
+/// let mut mapper = CharMapper::new("hey\n??(x");
+/// assert_eq!(mapper.next().unwrap().char(), Some(b'h'));
+/// assert_eq!(mapper.next().unwrap().char(), Some(b'e'));
+/// assert_eq!(mapper.next().unwrap().char(), Some(b'y'));
+/// mapper.next();
+///
+/// let next = mapper.next().unwrap();
+/// assert_eq!(next.pos(), (1, 0));
+/// assert_eq!(next.char(), Some((b'[')));
+/// 
+/// let final_char = mapper.next().unwrap();
+/// assert_eq!(final_char.pos(), (1, 3));
+/// assert_eq!(final_char.char(), Some(b'x'));
+/// 
+/// assert_eq!(mapper.next(), None);
+/// ```
+#[derive(Debug)]
+pub struct CharMapper<'a> {
+    source: Cursor<'a>,
+    row: u64,
+    col: u64,
+}
+
+/// Char wrapper with positional information too needed if trigraphs are used.
+///
+/// # Example
+/// ```rust
+/// use acc_compiler::preprocessor::character_mapping::mapper::MappedChar;
+/// let chr = MappedChar::new(Some(b'a'), 10, 3);
+///
+/// assert_eq!(chr.char(), Some(b'a'));
+/// assert_eq!(chr.pos(), (10, 3));
+/// ```
+#[derive(Debug, PartialEq, Eq)]
+pub struct MappedChar {
+    chr: Option<u8>,
+    row: u64,
+    col: u64,
+}
+
+impl<'a> CharMapper<'a> {
+    /// Constructor for character mapping, taking string slice as input.
+    pub fn new(input: &'a str) -> CharMapper<'a> {
+        CharMapper {
+            source: Cursor::new(input),
+            row: 0,
+            col: 0,
+        }
+    }
+}
+
+impl Iterator for CharMapper<'_> {
+    type Item = MappedChar;
+
+    fn next(&mut self) -> Option<MappedChar> {
+        match (self.source.first(), self.source.second(), self.source.third()) {
+            (EOF_CHAR, _, _) => None,
+            (a, b, c) if TRIGRAPH_MAP.contains_key(&(a, b, c)) => {
+                let chr = TRIGRAPH_MAP[&(a, b, c)];
+                let result = Some(MappedChar::new(Some(chr), self.row, self.col));
+
+                self.col += 3;
+                self.source.bump_n(3);
+                return result;
+            }
+            ('\r', '\n', _) => {
+                let result = Some(MappedChar::new(Some(b' '), self.row, self.col));
+
+                self.row += 1;
+                self.col = 0;
+                self.source.bump_n(2);
+                return result;
+            }
+            ('\n', _, _) => {
+                let result = Some(MappedChar::new(Some(b' '), self.row, self.col));
+
+                self.row += 1;
+                self.col = 0;
+                self.source.bump();
+                return result;
+            }
+            (a, _, _) if WHITESPACE_SET.contains(&a) => {
+                let result = Some(MappedChar::new(Some(b' '), self.row, self.col));
+
+                self.col += 1;
+                self.source.bump();
+                return result;
+            }
+            (a, _, _) if ALPHABET.contains(&a) => {
+                let result = Some(MappedChar::new(Some(a as u8), self.row, self.col));
+
+                self.col += 1;
+                self.source.bump();
+                return result;
+            }
+            (_, _, _) => {
+                let result = Some(MappedChar::new(None, self.row, self.col));
+
+                self.col += 1;
+                self.source.bump();
+                return result;
+            }
+        }
+    }
+}
+
+impl MappedChar {
+    pub fn new(chr: Option<u8>, row: u64, col: u64) -> MappedChar {
+        MappedChar { chr: chr, row: row, col: col }
+    }
+
+    /// Return Option<u8> of character it is holding. This will be None if the character
+    /// is not part of the source alphabet.
+    pub fn char(&self) -> Option<u8> {
+        self.chr
+    }
+
+    /// Return position character was found at/started at
+    pub fn pos(&self) -> (u64, u64) {
+        (self.row, self.col)
+    }
+}
+
