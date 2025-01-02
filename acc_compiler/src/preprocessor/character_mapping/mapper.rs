@@ -3,7 +3,7 @@ use crate::preprocessor::character_mapping::{cursor::Cursor, cursor::EOF_CHAR, s
 use super::spec::{ALPHABET, WHITESPACE_SET};
 
 /// Implementation for translation phase 1, mapping characters to source
-/// language alphabet.
+/// language alphabet. Characters not part of the source alphabet are ignored.
 ///
 /// # Examples
 /// ```rust
@@ -13,7 +13,7 @@ use super::spec::{ALPHABET, WHITESPACE_SET};
 /// let vec: Vec<MappedChar> = mapper.into_iter().collect();
 ///
 /// assert_eq!(vec[0].chr().unwrap(), b'x');
-/// assert_eq!(vec[3].chr().unwrap(), b' ');
+/// assert_eq!(vec[3].chr().unwrap(), b'\n');
 /// assert_eq!(vec[4].chr().unwrap(), b'3');
 /// ```
 /// ```rust
@@ -84,6 +84,22 @@ impl Iterator for CharMapper<'_> {
                 self.source.bump_n(3);
                 return result;
             }
+            ('\\', '\r', '\n') => {
+                let result = Some(MappedChar::new(None, self.row, self.col));
+
+                self.row += 1;
+                self.col = 0;
+                self.source.bump_n(3);
+                return result;
+            }
+            ('\\', '\n', _) => {
+                let result = Some(MappedChar::new(None, self.row, self.col));
+
+                self.row += 1;
+                self.col = 0;
+                self.source.bump_n(2);
+                return result;
+            }
             ('\r', '\n', _) => {
                 let result = Some(MappedChar::new(Some(b'\n'), self.row, self.col));
 
@@ -127,11 +143,11 @@ impl Iterator for CharMapper<'_> {
 
 impl MappedChar {
     pub fn new(chr: Option<u8>, row: u64, col: u64) -> MappedChar {
-        MappedChar { chr: chr, row: row, col: col }
+        MappedChar { chr, row, col }
     }
 
     /// Return Option<u8> of character it is holding. This will be None if the character
-    /// is not part of the source alphabet.
+    /// is not part of the source alphabet or if it is a backslash-newline combination.
     pub fn chr(&self) -> Option<u8> {
         self.chr
     }
