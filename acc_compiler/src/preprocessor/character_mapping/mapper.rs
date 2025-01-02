@@ -11,7 +11,7 @@ use super::spec::{ALPHABET, WHITESPACE_SET};
 /// let my_str = "xyz\r\n3";
 /// let mut mapper = CharMapper::new(my_str);
 /// let vec: Vec<MappedChar> = mapper.into_iter().collect();
-/// 
+///
 /// assert_eq!(vec[0].char().unwrap(), b'x');
 /// assert_eq!(vec[3].char().unwrap(), b' ');
 /// assert_eq!(vec[4].char().unwrap(), b'3');
@@ -28,11 +28,11 @@ use super::spec::{ALPHABET, WHITESPACE_SET};
 /// let next = mapper.next().unwrap();
 /// assert_eq!(next.pos(), (1, 0));
 /// assert_eq!(next.char(), Some((b'[')));
-/// 
+///
 /// let final_char = mapper.next().unwrap();
 /// assert_eq!(final_char.pos(), (1, 3));
 /// assert_eq!(final_char.char(), Some(b'x'));
-/// 
+///
 /// assert_eq!(mapper.next(), None);
 /// ```
 #[derive(Debug)]
@@ -141,4 +141,3 @@ impl MappedChar {
         (self.row, self.col)
     }
 }
-
