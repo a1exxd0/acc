@@ -1,12 +1,12 @@
 use std::str::Chars;
 
-const EOF_CHAR: char = '\0';
+pub(in crate::preprocessor) const EOF_CHAR: char = '\0';
 
 /// Peekable iterator over a character sequence
 ///
 /// # Example
 /// ```rust
-/// use acc_compiler::compiler::lexer::cursor::Cursor;
+/// use acc_compiler::preprocessor::character_mapping::cursor::Cursor;
 /// let mut cursor = Cursor::new("hello");
 ///
 /// let peeked_second = cursor.second();
@@ -15,6 +15,7 @@ const EOF_CHAR: char = '\0';
 /// let first_read = cursor.bump();
 /// assert_eq!(first_read, Some('h'));
 /// ```
+#[derive(Debug)]
 pub struct Cursor<'a> {
     chars: Chars<'a>,
 }
@@ -36,7 +37,7 @@ impl<'a> Cursor<'a> {
     ///
     /// # Example
     /// ```rust
-    /// use acc_compiler::compiler::lexer::cursor::Cursor;
+    /// use acc_compiler::preprocessor::character_mapping::cursor::Cursor;
     /// let mut cursor = Cursor::new("Hello World!");
     ///
     /// // Move forward one character, next bump will produce 'e'
@@ -57,7 +58,7 @@ impl<'a> Cursor<'a> {
     ///
     /// # Example
     /// ```rust
-    /// use acc_compiler::compiler::lexer::cursor::Cursor;
+    /// use acc_compiler::preprocessor::character_mapping::cursor::Cursor;
     /// let mut cursor = Cursor::new("Hello World!");
     ///
     /// // Move forward one character, next bump will produce 'e'
@@ -75,6 +76,29 @@ impl<'a> Cursor<'a> {
         iter.next().unwrap_or(EOF_CHAR)
     }
 
+    /// Peeks third character not processed.
+    ///
+    /// # Example
+    /// ```rust
+    /// use acc_compiler::preprocessor::character_mapping::cursor::Cursor;
+    /// let mut cursor = Cursor::new("Hello World!");
+    ///
+    /// // Move forward one character, next bump will produce 'e'
+    /// cursor.bump();
+    /// assert_eq!(cursor.third(), 'l');
+    ///
+    /// /// If you peek past the end of a character sequence, a null
+    /// /// terminator ('\0') is returned.
+    /// let short_cursor = Cursor::new("X");
+    /// assert_eq!(short_cursor.third(), '\0');
+    /// ```
+    pub fn third(&self) -> char {
+        let mut iter = self.chars.clone();
+        iter.next();
+        iter.next();
+        iter.next().unwrap_or(EOF_CHAR)
+    }
+
     // Returns true if the character sequence is empty.
     pub fn is_eof(&self) -> bool {
         self.chars.as_str().is_empty()
@@ -85,7 +109,7 @@ impl<'a> Cursor<'a> {
     ///
     /// # Example
     /// ```rust
-    /// use acc_compiler::compiler::lexer::cursor::Cursor;
+    /// use acc_compiler::preprocessor::character_mapping::cursor::Cursor;
     ///
     /// let mut short_cursor = Cursor::new("X");
     /// assert_eq!(short_cursor.bump(), Some('X'));
@@ -93,5 +117,23 @@ impl<'a> Cursor<'a> {
     /// ```
     pub fn bump(&mut self) -> Option<char> {
         self.chars.next()
+    }
+
+    /// Advances the cursor `n` times and returns the character
+    /// pointed to, or `None` if the character sequence is empty.
+    ///
+    /// # Example
+    /// ```rust
+    /// use acc_compiler::preprocessor::character_mapping::cursor::Cursor;
+    ///
+    /// let mut short_cursor = Cursor::new("Hello!");
+    /// assert_eq!(short_cursor.bump_n(5), Some('o'));
+    /// ```
+    pub fn bump_n(&mut self, n: usize) -> Option<char> {
+        for _ in 1..n {
+            self.bump();
+        }
+
+        self.bump()
     }
 }
