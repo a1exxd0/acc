@@ -1,4 +1,4 @@
-use super::mapper::MappedChar;
+use super::MappedChar;
 
 /// Prints characters in MappedChar slice as if there was no metadata
 pub fn mapped_chars_to_str(chars: &[MappedChar]) -> String {
