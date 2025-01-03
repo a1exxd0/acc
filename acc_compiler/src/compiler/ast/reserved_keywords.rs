@@ -1,4 +1,4 @@
-use crate::compiler::lexer::types::KeyWord;
+use crate::compiler::ast::tokens::KeyWord;
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
 
@@ -12,7 +12,7 @@ macro_rules! initialize_keywords {
     }};
 }
 
-static RESERVED_KEYWORDS: Lazy<HashMap<&'static str, KeyWord>> = Lazy::new(|| {
+pub(crate) static RESERVED_KEYWORDS: Lazy<HashMap<&'static str, KeyWord>> = Lazy::new(|| {
     initialize_keywords!(
         Auto        => "auto",
         Double      => "double",
