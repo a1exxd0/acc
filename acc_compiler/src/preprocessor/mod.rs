@@ -3,3 +3,5 @@
 /// 2) Concatenation of backslash-newlines into one line
 pub mod character_mapping;
 pub mod lexer;
+
+enum PreprocessingToken {}

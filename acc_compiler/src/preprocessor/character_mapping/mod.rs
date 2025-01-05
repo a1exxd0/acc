@@ -77,7 +77,7 @@ impl<'a> CharMapper<'a> {
 impl Iterator for CharMapper<'_> {
     type Item = MappedChar;
 
-    fn next(&mut self) -> Option<MappedChar> {
+    fn next(&mut self) -> Option<Self::Item> {
         match (self.source.first(), self.source.second(), self.source.third()) {
             (EOF_CHAR, _, _) => None,
             (a, b, c) if TRIGRAPH_MAP.contains_key(&(a, b, c)) => {
