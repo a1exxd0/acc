@@ -15,7 +15,7 @@ pub(in crate::preprocessor) const EOF_CHAR: char = '\0';
 /// let first_read = cursor.bump();
 /// assert_eq!(first_read, Some('h'));
 /// ```
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Cursor<'a> {
     chars: Chars<'a>,
 }

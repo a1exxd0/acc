@@ -39,7 +39,7 @@ use spec::{ALPHABET, WHITESPACE_SET};
 ///
 /// assert_eq!(mapper.next(), None);
 /// ```
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct CharMapper<'a> {
     source: Cursor<'a>,
     row: u64,
@@ -71,6 +71,24 @@ impl<'a> CharMapper<'a> {
             row: 0,
             col: 0,
         }
+    }
+
+    pub fn first(&self) -> Option<MappedChar> {
+        let mut it = self.clone();
+        it.next()
+    }
+
+    pub fn second(&self) -> Option<MappedChar> {
+        let mut it = self.clone();
+        it.next()?;
+        it.next()
+    }
+
+    pub fn third(&self) -> Option<MappedChar> {
+        let mut it = self.clone();
+        it.next()?;
+        it.next()?;
+        it.next()
     }
 }
 

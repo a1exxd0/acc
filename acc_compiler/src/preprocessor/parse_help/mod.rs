@@ -1,5 +1,5 @@
 use super::{PreprocessingSymbol, PREPROCESSING_SYMBOL_MAP};
-use crate::preprocessor::{CharMapper, Symbol};
+use crate::preprocessor::CharMapper;
 
 /// Intended to to ease preprocessing. Grammar is
 /// <base-token>
@@ -16,6 +16,7 @@ use crate::preprocessor::{CharMapper, Symbol};
 /// 3) Consecutive characters
 /// 4) Consecutive nums
 /// 5) Symbols
+#[derive(Debug, Clone)]
 pub(crate) enum BaseTokenInner {
     Whitespace,
     Newline,
@@ -29,6 +30,7 @@ pub(crate) enum BaseTokenInner {
 /// The preprocessing language is not a regular language, and
 /// therefore to simplify implementation, we will tokenise with a regular
 /// language and then parse with much more ease.
+#[derive(Debug, Clone)]
 pub(crate) struct BaseToken {
     token: BaseTokenInner,
     row: u64,
@@ -41,11 +43,30 @@ impl BaseToken {
     }
 }
 
+#[derive(Debug, Clone)]
 pub(crate) struct PreprocessingTokenizer<'a> {
     char_mapper: CharMapper<'a>,
 }
 
 impl<'a> PreprocessingTokenizer<'a> {
+    pub fn first(&self) -> Option<BaseToken> {
+        let mut it = self.clone();
+        it.next()
+    }
+
+    pub fn second(&self) -> Option<BaseToken> {
+        let mut it = self.clone();
+        it.next()?;
+        it.next()
+    }
+
+    pub fn third(&self) -> Option<BaseToken> {
+        let mut it = self.clone();
+        it.next()?;
+        it.next()?;
+        it.next()
+    }
+
     fn consume_whitespace(&mut self) -> Option<(u64, u64)> {
         let tuple;
         if let Some(chr) = self.char_mapper.first() {

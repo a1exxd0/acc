@@ -3,11 +3,11 @@
 /// 2) Concatenation of backslash-newlines into one line
 pub mod character_mapping;
 mod parse_help;
+use crate::compiler::lexer::types::Symbol;
 use crate::preprocessor::character_mapping::CharMapper;
 use once_cell::sync::Lazy;
 use parse_help::PreprocessingTokenizer;
 use std::collections::HashMap;
-use crate::compiler::lexer::types::Symbol;
 use std::collections::VecDeque;
 
 /// Output pp-tokens.
