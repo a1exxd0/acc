@@ -21,6 +21,8 @@ pub enum Symbol {
     RightSquareBracket,
     LeftBracket,
     RightBracket,
+    LeftCurlyBracket,
+    RightCurlyBracket,
     Period,
     RightArrow,
     Increment,
@@ -63,4 +65,5 @@ pub enum Symbol {
     DoubleHash,
     Semicolon,
     Ellipses,
+    Unknown,
 }

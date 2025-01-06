@@ -5,12 +5,14 @@ pub mod character_mapping;
 mod parse_help;
 use crate::preprocessor::character_mapping::CharMapper;
 use once_cell::sync::Lazy;
+use parse_help::PreprocessingTokenizer;
 use std::collections::HashMap;
+use crate::compiler::lexer::types::Symbol;
 use std::collections::VecDeque;
 
 /// Output pp-tokens.
 struct Preprocessor<'a> {
-    char_mapper: CharMapper<'a>,
+    char_mapper: PreprocessingTokenizer<'a>,
 
     /// Record of previously found tokens. Front of the deque
     /// represents most-recently-parsed.
@@ -56,60 +58,6 @@ pub enum PreprocessingToken {
     StringLiteral { wide: bool, val: String },
     Symbol { val: Symbol },
     PreprocessingError { err_msg: String, row: u64, col: u64 },
-}
-
-/// Union of punctuators and operators.
-#[derive(Hash, PartialEq, Eq, Debug, Clone, Copy)]
-pub enum Symbol {
-    LeftSquareBracket,
-    RightSquareBracket,
-    LeftBracket,
-    RightBracket,
-    LeftCurlyBracket,
-    RightCurlyBracket,
-    Period,
-    RightArrow,
-    Increment,
-    Decrement,
-    Ampersand,
-    Asterisk,
-    Plus,
-    Minus,
-    Tilde,
-    Bang,
-    ForwardSlash,
-    Percent,
-    LeftShift,
-    RightShift,
-    LessThan,
-    GreaterThan,
-    LessThanOrEqual,
-    GreaterThanOrEqual,
-    EqualTo,
-    NotEqualTo,
-    Hat,
-    Pipe,
-    DoubleAnd,
-    DoublePipe,
-    QuestionMark,
-    Colon,
-    Assign,
-    AsteriskAssign,
-    ForwardSlashAssign,
-    PercentAssign,
-    PlusAssign,
-    MinusAssign,
-    LeftShiftAssign,
-    RightShiftAssign,
-    AmpersandAssign,
-    HatAssign,
-    PipeAssign,
-    Comma,
-    Hash,
-    DoubleHash,
-    Semicolon,
-    Ellipses,
-    Unknown,
 }
 
 macro_rules! preprocessing_symbol_map {
