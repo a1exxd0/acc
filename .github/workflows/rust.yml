@@ -2,9 +2,9 @@ name: Rust
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   CARGO_TERM_COLOR: always
@@ -19,12 +19,12 @@ jobs:
           - nightly
     name: build/${{ matrix.rust }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: dtolnay/rust-toolchain@nightly
-    - name: Build
-      run: cargo +${{ matrix.rust }} build --verbose
-    - name: Run tests
-      run: cargo +${{ matrix.rust }} test --verbose
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+      - name: Build
+        run: cargo +${{ matrix.rust }} build --verbose
+      - name: Run tests
+        run: cargo +${{ matrix.rust }} test --verbose
 
   clippy:
     runs-on: ubuntu-latest
@@ -41,8 +41,8 @@ jobs:
           toolchain: ${{ matrix.rust }}
           components: clippy
       - uses: Swatinem/rust-cache@v2
-      - run: cargo clippy
-    
+      - run: cargo clippy -- -D warnings
+
   format:
     runs-on: ubuntu-latest
     strategy:
@@ -61,18 +61,5 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           components: rustfmt
-      - name: Format repository
-        run: cargo fmt --all --check || cargo fmt --all
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        id: auto-commit-action
-        with:
-          commit_message: "style: auto formatter called from gh-actions"
-          
-      - name: "Run if changes have been detected"
-        if: steps.auto-commit-action.outputs.changes_detected == 'true'
-        run: echo "Changes!"
-
-      - name: "Run if no changes have been detected"
-        if: steps.auto-commit-action.outputs.changes_detected == 'false'
-        run: echo "No Changes!"
-
+      - name: Format repository check
+        run: cargo fmt --all --check
